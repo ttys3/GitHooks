@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+#
+# pre-receive hook for deploy
+# mod from: https://github.com/aitemr/awesome-git-hooks/blob/master/post-receive/post-receive-specific-folder
+#
+
+target_branch="prod"
+#config deploy dir
+deploy_to_dir="PATH_TO_DEPLOY"
+
+post_file_to_check="composer.lock"
+post_cmd="composer install -v --working-dir ${deploy_to_dir} --no-dev"
+
+# 1. Read STDIN (Format: "from_commit to_commit branch_name")
+
+while read oldrev newrev refname
+do
+    branch=$(git rev-parse --symbolic --abbrev-ref $refname)
+    # 2. Only deploy if target_branch was pushed
+    if [ -n "$branch" ] && [ "$target_branch" == "$branch" ]; then
+    
+        echo "Received branch ${branch}, start deploying."
+         # 3. Copy files to deploy directory
+       GIT_WORK_TREE=$deploy_to_dir git checkout $target_branch -f
+       echo "DEPLOY: ${branch}(${newrev}) copied to ${deploy_to_dir}"
+        
+        # 4. post action after checkout branch
+        changed_files = $(GIT_WORK_TREE="${deploy_to_dir}" git diff-tree -r --name-only --no-commit-id $oldrev $newrev)
+        echo "${changed_files}" | grep --quiet "${post_file_to_check}" > /dev/null 2>&1
+
+        if [ $? -eq 0 ]; then
+            echo "=== ${post_file_to_check} is not changed. ==="
+        else
+            cmd_result = $(${post_cmd})
+            print "=== cmd executed. === \n=== cmd result: \n $cmd_result" >&2
+        fi
+
+       NOW=$(date +"%Y%m%d-%H%M")
+       git tag release_$NOW $target_branch
+    
+       echo "   /==============================="
+       echo "   | DEPLOYMENT COMPLETED"
+       echo "   | Target branch: $target_branch"
+       echo "   | Target folder: $deploy_to_dir"
+       echo "   | Tag name     : release_$NOW"
+       echo "   \=============================="
+    fi
+done
+
+# vim: set ft=bash ts=4 sw=4 et:
