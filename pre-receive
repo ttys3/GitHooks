@@ -63,3 +63,5 @@ while read oldrev newrev refname; do
   done
 done
 exit 0
+
+# vim: set ft=bash ts=4 sw=4 et:
