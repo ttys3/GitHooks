@@ -20,7 +20,7 @@ do
     # 2. Only deploy if target_branch was pushed
     if [ -n "$branch" ] && [ "$target_branch" == "$branch" ]; then
     
-        echo "Received branch ${branch}, start deploying."
+       echo "Received branch ${branch}, start deploying."
          # 3. Copy files to deploy directory
        GIT_WORK_TREE=$deploy_to_dir git checkout $target_branch -f
        echo "DEPLOY: ${branch}(${newrev}) copied to ${deploy_to_dir}"
