@@ -3,19 +3,22 @@
 #
 # Pre-receive hook that will block any new commits that contain files ending
 # with .gz, .zip or .tgz
+# you can put this file to /home/git/.gitolite/hooks/ttys3/pre-receive
 #
 # More details on pre-receive hooks and how to apply them can be found on
 # https://help.github.com/enterprise/admin/guides/developer-workflow/managing-pre-receive-hooks-on-the-github-enterprise-appliance/
 #
 
 # ----- START CONFIG -----
-DISABLED_EXT_CONF_FILE=/home/hacklog/.git_file_ext_disabled
-deploy_to_dir="/tmp/tst_work/"
+DISABLED_EXT_CONF_FILE=/home/git/.gitolite/hooks/ttys3/.git_file_ext_disabled
+deploy_to_dir="/tmp/git_empty_work/"
 GIT_CMD="env GIT_WORK_TREE=$deploy_to_dir /usr/bin/git"
 shopt -s extglob
 FILE_EXT_DISABLED=`cat $DISABLED_EXT_CONF_FILE`
 FILE_EXT_DISABLED_PATTERN="@($FILE_EXT_DISABLED)"
 # ----- END CONFIG -----
+
+test -d $deploy_to_dir || mkdir $deploy_to_dir
 
 zero_commit="0000000000000000000000000000000000000000"
 

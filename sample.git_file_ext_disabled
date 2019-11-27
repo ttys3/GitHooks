@@ -1,1 +1,1 @@
-.env|.tags|.tag|Thumbs.db|*.rar|*.zip|*.gz|*.tgz|*.dll|*.exe|*.log
+.env|.tags|.tag|Thumbs.db|*.rar|*.zip|*.gz|*.tgz|*.dll|*.exe|*.log|*.tmp|*.part
