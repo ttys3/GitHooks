@@ -26,14 +26,14 @@ do
        echo "DEPLOY: ${branch}(${newrev}) copied to ${deploy_to_dir}"
         
         # 4. post action after checkout branch
-        changed_files = $(GIT_WORK_TREE="${deploy_to_dir}" git diff-tree -r --name-only --no-commit-id $oldrev $newrev)
+        changed_files=$(GIT_WORK_TREE="${deploy_to_dir}" git diff-tree -r --name-only --no-commit-id $oldrev $newrev)
         echo "${changed_files}" | grep --quiet "${post_file_to_check}" > /dev/null 2>&1
 
         if [ $? -eq 0 ]; then
-            echo "=== ${post_file_to_check} is not changed. ==="
+            cmd_result=$(${post_cmd})
+            echo -e "=== cmd executed. === \n=== cmd result: \n $cmd_result" >&2
         else
-            cmd_result = $(${post_cmd})
-            print "=== cmd executed. === \n=== cmd result: \n $cmd_result" >&2
+            echo "=== ${post_file_to_check} is not changed. ==="
         fi
 
        NOW=$(date +"%Y%m%d-%H%M")
