@@ -10,7 +10,7 @@ target_branch="prod"
 deploy_to_dir="PATH_TO_DEPLOY"
 
 post_file_to_check="composer.lock"
-post_cmd="composer install -v --working-dir ${deploy_to_dir} --no-dev"
+post_cmd="/home/git/bin/composer install -v --working-dir ${deploy_to_dir} --no-dev"
 
 # 1. Read STDIN (Format: "from_commit to_commit branch_name")
 
